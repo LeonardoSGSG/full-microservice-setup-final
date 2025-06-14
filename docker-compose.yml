@@ -47,6 +47,8 @@ services:
     build: ./ms05-xml-reader
     depends_on:
       - kafka
+    volumes:
+      - ./ms05-xml-reader/xml-testing:/app/xml-testing
 
   ms04-rest-api:
     build: ./ms04-rest-api
