@@ -1,6 +1,6 @@
 # Full Microservice Setup – Intercorp Retail
 
-Este proyecto contiene la arquitectura completa basada en microservicios para la prueba técnica de Intercorp Retail. Incluye 4 microservicios, base de datos PostgreSQL, Kafka, Zookeeper y un archivo `docker-compose.yml` para facilitar el despliegue.
+Este proyecto contiene la arquitectura completa basada en microservicios para la prueba técnica de Intercorp Retail. Incluye 4 microservicios, base de datos PostgreSQL, Kafka, Zookeeper, un frontend Angular y un archivo `docker-compose.yml` para facilitar el despliegue.
 
 ## 🧱 Estructura del Proyecto
 
@@ -30,7 +30,7 @@ full-microservice-setup/
 1. Clona este repositorio:
 
    ```bash
-   git clone https://github.com/tu-usuario/full-microservice-setup.git
+   git clone https://github.com/LeonardoSGSG/full-microservice-setup.git
    cd full-microservice-setup
    ```
 
@@ -46,6 +46,7 @@ full-microservice-setup/
    - `ms01-consumer-db`: http://localhost:8082
    - `ms02-transform-timestamp`: http://localhost:8083
    - `ms04-rest-api`: http://localhost:8084
+   - `Frontend Angular`: http://localhost:4200
 
 4. PostgreSQL estará disponible en:
    - **Host:** `localhost`
@@ -58,6 +59,8 @@ full-microservice-setup/
 
 ## 📦 Tecnologías utilizadas
 
+- Angular 17 (standalone API)
+- NGINX (para servir la app Angular)
 - Java 17
 - Spring Boot 3.5.0
 - Apache Kafka + Zookeeper
@@ -76,11 +79,43 @@ full-microservice-setup/
 
 ---
 
+## 💻 Funcionalidad del Frontend
+
+La aplicación Angular (intercorp-retail-frontend) permite visualizar los datos consolidados obtenidos desde el microservicio ms04-rest-api.
+Características:
+
+Tabla con todos los registros.
+
+Búsqueda por nombre, apellido, ciudad, país o correo electrónico.
+
+Muestra la fecha y hora de la última actualización realizada desde el scheduler (MS05).
+
+El frontend es compilado y servido automáticamente desde NGINX.
+
+No es necesario ejecutar ng serve.
+
+---
+
 ## 📂 Consideraciones de entrega
 
 - Cada microservicio contiene su propio `Dockerfile`.
 - Todo el ecosistema es orquestado por un solo `docker-compose.yml`.
-- Se espera que los datos fluyan desde XML → Kafka → BD → REST.
+- Flujo esperado de los datos:
+  XML
+  ↓
+  Microservicio 05
+  ↓
+  Kafka Topic 01
+  ├──→ Microservicio 01 → PostgreSQL
+  ↓
+  Microservicio 02
+  ↓
+  Kafka Topic 02
+  ├──→ PostgreSQL (a través de MS01, indirectamente)
+  ↓
+  Microservicio 04
+  ↓
+  Angular Frontend
 
 ---
 

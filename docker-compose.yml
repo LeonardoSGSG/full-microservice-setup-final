@@ -70,5 +70,14 @@ services:
       - postgres
     restart: always
 
+  frontend:
+    build:
+      context: ./intercorp-retail-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - ms04-rest-api
+    restart: always
+
 volumes:
   postgres_data:
