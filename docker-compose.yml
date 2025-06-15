@@ -7,11 +7,17 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     ports:
       - "9092:9092"
     environment:
@@ -20,6 +26,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: always
 
   postgres:
     image: postgres:15
@@ -31,17 +38,20 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    restart: always
 
   ms01-consumer-db:
     build: ./ms01-consumer-db
     depends_on:
       - kafka
       - postgres
+    restart: always
 
   ms02-transform-timestamp:
     build: ./ms02-transform-timestamp
     depends_on:
       - kafka
+    restart: always
 
   ms05-xml-reader:
     build: ./ms05-xml-reader
@@ -49,6 +59,7 @@ services:
       - kafka
     volumes:
       - ./ms05-xml-reader/xml-testing:/app/xml-testing
+    restart: always
 
   ms04-rest-api:
     build: ./ms04-rest-api
@@ -57,6 +68,7 @@ services:
     depends_on:
       - kafka
       - postgres
+    restart: always
 
 volumes:
   postgres_data:
