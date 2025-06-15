@@ -1,0 +1,39 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+**/logs/
+**/*.log
+
+# Eclipse / IntelliJ / VSCode
+*.classpath
+*.project
+*.settings/
+.idea/
+*.iml
+*.vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+
+# Archivos de construcción y empaquetado
+*.jar
+*.war
+*.ear
+
+# Archivos de prueba o cobertura
+*.exec
+*.coverage
+*.lcov
+
+# Logs
+*.log
+
+# Credenciales o configuración local
+application-local.properties
+.env
